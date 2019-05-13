@@ -69,7 +69,7 @@ module RuboCop
 
           lambda do |corrector|
             corrector.replace(node.source_range,
-                              "#{variable} ||= #{default.source}")
+                              "#{variable} ||= #{default.source if default}")
           end
         end
 
