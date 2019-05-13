@@ -6,6 +6,13 @@ RSpec.describe RuboCop::Cop::Style::OrAssignment do
   let(:config) { RuboCop::Config.new }
 
   context 'when using var = var ? var : something' do
+    it 'registers an offense with no true clause' do
+      expect_offense(<<~RUBY)
+        foo = foo ? : 'default'
+        ^^^^^^^^^^^^^^^^^^^^^^^^^^^ Use the double pipe equals operator `||=` instead.
+      RUBY
+    end
+    
     it 'registers an offense with normal variables' do
       expect_offense(<<~RUBY)
         foo = foo ? foo : 'default'
@@ -57,6 +64,16 @@ RSpec.describe RuboCop::Cop::Style::OrAssignment do
   end
 
   context 'when using var = if var; var; else; something; end' do
+    it 'registers an offense with no true clause' do
+      expect_offense(<<~RUBY)
+        foo = if foo
+        ^^^^^^^^^^^^ Use the double pipe equals operator `||=` instead.
+              else
+                'default'
+              end
+      RUBY
+    end
+    
     it 'registers an offense with normal variables' do
       expect_offense(<<~RUBY)
         foo = if foo
